@@ -47,7 +47,7 @@ class FermentWifiActor(ActorBase):
         	self.send("ControleCraftDesliga?pino=PINO_AQUECEDOR&estado=HIGH)   
 
 @cbpi.sensor
-class HTTPSensor(SensorActive):
+class FermentWifiSensor(SensorActive):
     key = Property.Text(label="Key", configurable=True)
     def execute(self):
         global cache
