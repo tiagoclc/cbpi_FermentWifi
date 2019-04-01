@@ -24,9 +24,8 @@ class FermentWifiActor(ActorBase):
     oQueUsar = Property.Select("O que utilizar do FermentWifi", options=["Aquecedor", "Resfriador"], description="Escolher o que usar do FermentWifi")
     def send(self, command):
         try:
-        h = httplib2.Http(".cache")
-
-        (resp, content) = h.request("%s/%s" % (self.a_url, command), "GET", headers={'cache-control':'no-cache'})
+			h = httplib2.Http(".cache")
+        	(resp, content) = h.request("%s/%s" % (self.a_url, command), "GET", headers={'cache-control':'no-cache'})
         except Exception as e:
         self.api.app.logger.error("Falha ao tentar controlar o ator do FermentWifi: %s/%s" % (self.a_url, command))
     def on(self, power=None):
