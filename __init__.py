@@ -57,7 +57,7 @@ class FermentWifiSensor(SensorActive):
 	
 			self.api.socketio.sleep(1)
 
-@blueprint.route('/<id>/<value>', methods=['POST'])
+@blueprint.route('/<id>/<value>', methods=['GET'])
 def set_temp(id, value):
 	global cache
 	cache[id] = value
