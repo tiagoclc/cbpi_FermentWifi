@@ -21,7 +21,7 @@ cache = {}
 class FermentWifiActor(ActorBase):
 
 	a_url = Property.Text("Endereço do FermentWifi", configurable=True, default_value="fermentwifi.local", description="Endereço IP do FermentWifi - Pode funcionar com o endereço fermentwifi.local se o seu roteador suportar.")
-	oQueUsar = Property.Select("O que utilizar do FermentWifi", options=["Aquecedor", "Resfriador"], description="Escolher o que usar do FermentWifi")
+	usar = Property.Select("O que utilizar do FermentWifi", options=["Aquecedor", "Resfriador"], description="Escolher o que usar do FermentWifi")
 
 	def send(self, command):
         	try:
@@ -31,15 +31,15 @@ class FermentWifiActor(ActorBase):
                 	self.api.app.logger.error("Falha ao tentar controlar o ator do FermentWifi: %s/%s" % (self.a_url, command))
 
 	def on(self, power=None):
-		if self.oQueUsar=="Resfriador":
+		if self.usar=="Resfriador":
 			self.send("ControleCraftLiga?pino=PINO_RESFRIADOR&estado=HIGH")
-	elif self.oQueUsar=="Aquecedor":
+		elif self.usar=="Aquecedor":
 			self.send("ControleCraftLiga?pino=PINO_AQUECEDOR&estado=HIGH")
 
 	def off(self):
-		if self.oQueUsar=="Resfriador":
+		if self.usar=="Resfriador":
 			self.send("ControleCraftDesliga?pino=PINO_RESFRIADOR&estado=LOW")
-	elif self.oQueUsar=="Aquecedor":
+		elif self.usar=="Aquecedor":
 			self.send("ControleCraftDesliga?pino=PINO_AQUECEDOR&estado=LOW")
 
 @cbpi.sensor
