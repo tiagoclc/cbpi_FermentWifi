@@ -32,15 +32,15 @@ class FermentWifiActor(ActorBase):
 
 	def on(self, power=None):
 		if self.oQueUsar=="Resfriador":
-		self.send("ControleCraftLiga?pino=PINO_RESFRIADOR&estado=HIGH")
+			self.send("ControleCraftLiga?pino=PINO_RESFRIADOR&estado=HIGH")
 	elif self.oQueUsar=="Aquecedor":
-		self.send("ControleCraftLiga?pino=PINO_AQUECEDOR&estado=HIGH")
+			self.send("ControleCraftLiga?pino=PINO_AQUECEDOR&estado=HIGH")
 
 	def off(self):
 		if self.oQueUsar=="Resfriador":
-		self.send("ControleCraftDesliga?pino=PINO_RESFRIADOR&estado=LOW")
+			self.send("ControleCraftDesliga?pino=PINO_RESFRIADOR&estado=LOW")
 	elif self.oQueUsar=="Aquecedor":
-		self.send("ControleCraftDesliga?pino=PINO_AQUECEDOR&estado=LOW")
+			self.send("ControleCraftDesliga?pino=PINO_AQUECEDOR&estado=LOW")
 
 @cbpi.sensor
 class FermentWifiSensor(SensorActive):
