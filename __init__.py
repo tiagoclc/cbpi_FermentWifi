@@ -48,13 +48,14 @@ class FermentWifiSensor(SensorActive):
 	def execute(self):
 		global cache
 		while self.is_running():
-		try:
-			value = cache.pop(self.key, None)
-			if value is not None:
-				self.data_received(value)
-		except:
-			pass
-	self.api.socketio.sleep(1)
+			try:
+				value = cache.pop(self.key, None)
+				if value is not None:
+					self.data_received(value)
+			except:
+				pass
+	
+			self.api.socketio.sleep(1)
 
 @blueprint.route('/<id>/<value>', methods=['GET'])
 def set_temp(id, value):
