@@ -19,15 +19,14 @@ cache = {}
 
 @cbpi.actor
 class FermentWifiActor(ActorBase):
-
-    a_url = Property.Text("Endereço do FermentWifi", configurable=True, default_value="fermentwifi.local", description="Endereço IP do FermentWifi - Pode funcionar com o endereço fermentwifi.local se o seu roteador suportar.")
-    oQueUsar = Property.Select("O que utilizar do FermentWifi", options=["Aquecedor", "Resfriador"], description="Escolher o que usar do FermentWifi")
+	a_url = Property.Text("Endereço do FermentWifi", configurable=True, default_value="fermentwifi.local", description="Endereço IP do FermentWifi - Pode funcionar com o endereço fermentwifi.local se o seu roteador suportar.")
+	oQueUsar = Property.Select("O que utilizar do FermentWifi", options=["Aquecedor", "Resfriador"], description="Escolher o que usar do FermentWifi")
     def send(self, command):
         try:
 			h = httplib2.Http(".cache")
         	(resp, content) = h.request("%s/%s" % (self.a_url, command), "GET", headers={'cache-control':'no-cache'})
         except Exception as e:
-        self.api.app.logger.error("Falha ao tentar controlar o ator do FermentWifi: %s/%s" % (self.a_url, command))
+        	self.api.app.logger.error("Falha ao tentar controlar o ator do FermentWifi: %s/%s" % (self.a_url, command))
     def on(self, power=None):
         if self.oQueUsar=="Resfriador":
         	self.send("ControleCraftLiga?pino=PINO_RESFRIADOR&estado=HIGH)
