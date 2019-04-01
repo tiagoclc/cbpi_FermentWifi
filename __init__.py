@@ -32,15 +32,15 @@ class FermentWifiActor(ActorBase):
 
 	def on(self, power=None):
 		if self.usar=="Resfriador":
-			self.send("ControleCraftLiga?pino=PINO_RESFRIADOR&estado=HIGH")
+			self.send("ControleCraftLiga?pino=14&estado=1")
 		elif self.usar=="Aquecedor":
-			self.send("ControleCraftLiga?pino=PINO_AQUECEDOR&estado=HIGH")
+			self.send("ControleCraftLiga?pino=12&estado=1")
 
 	def off(self):
 		if self.usar=="Resfriador":
-			self.send("ControleCraftDesliga?pino=PINO_RESFRIADOR&estado=LOW")
+			self.send("ControleCraftDesliga?pino=14&estado=0")
 		elif self.usar=="Aquecedor":
-			self.send("ControleCraftDesliga?pino=PINO_AQUECEDOR&estado=LOW")
+			self.send("ControleCraftDesliga?pino=12&estado=0")
 
 @cbpi.sensor
 class FermentWifiSensor(SensorActive):
@@ -57,7 +57,7 @@ class FermentWifiSensor(SensorActive):
 	
 			self.api.socketio.sleep(1)
 
-@blueprint.route('/<id>/<value>', methods=['GET'])
+@blueprint.route('/<id>/<value>', methods=['POST'])
 def set_temp(id, value):
 	global cache
 	cache[id] = value
