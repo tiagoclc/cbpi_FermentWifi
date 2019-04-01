@@ -1,6 +1,9 @@
 # FermentWifi Plugin for CraftBeerPi 3.0
 
 ## Introduction
+
+Baseado nos plugins HTTPActor e HTTPSensor
+
 O plugin FermentWifi permite que o CraftBeerPi faça a leitura do sensor de temperatura do controlador de temperatura de fermentação FermentWifi Box
 Permite também que comandos sejam enviados para ligar ou desligar o sistema de aquecimento do fermentador, bem como o sistema de resfriamento.
 
