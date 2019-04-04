@@ -60,8 +60,6 @@ class FermentWifiSensor(SensorActive):
 def set_temp(id, value):
 	global cache
 	cache[id] = value
-	//id = value
-
 	return ('', 204)
 
 @cbpi.initalizer()
