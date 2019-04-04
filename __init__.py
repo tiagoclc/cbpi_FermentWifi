@@ -20,13 +20,12 @@ cache = {}
 @cbpi.actor
 class FermentWifiActor(ActorBase):
 
-	a_url = Property.Text("Endereço do FermentWifi", configurable=True, default_value="fermentwifi.local", description="Endereço IP do FermentWifi - Pode funcionar com o endereço fermentwifi.local se o seu roteador suportar.")
 	usar = Property.Select("O que utilizar do FermentWifi", options=["Aquecedor", "Resfriador"], description="Escolher o que usar do FermentWifi")
 
 	def send(self, command):
         	try:
                 	h = httplib2.Http(".cache")
-	                (resp, content) = h.request("%s/%s" % (self.a_url, command), "GET", headers={'cache-control':'no-cache'})
+	                (resp, content) = h.request("%s/%s" % ("http://fermentwifi.local:8080", command), "GET", headers={'cache-control':'no-cache'})
         	except Exception as e:
                 	self.api.app.logger.error("Falha ao tentar controlar o ator do FermentWifi: %s/%s" % (self.a_url, command))
 
@@ -60,7 +59,9 @@ class FermentWifiSensor(SensorActive):
 @blueprint.route('/<id>/<value>', methods=['GET'])
 def set_temp(id, value):
 	global cache
-	cache[id] = value
+	//cache[id] = value
+	id = value
+
 	return ('', 204)
 
 @cbpi.initalizer()
