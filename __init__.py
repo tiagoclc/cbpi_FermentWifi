@@ -25,9 +25,9 @@ class FermentWifiActor(ActorBase):
 	def send(self, command):
         	try:
                 	h = httplib2.Http(".cache")
-	                (resp, content) = h.request("%s/%s" % ("http://fermentwifi.local:8080", command), "GET", headers={'cache-control':'no-cache'})
+	                (resp, content) = h.request("%s/%s" % ("http://fermentwifi.local:80", command), "GET", headers={'cache-control':'no-cache'})
         	except Exception as e:
-                	self.api.app.logger.error("Falha ao tentar controlar o ator do FermentWifi: %s/%s" % ("http://fermentwifi.local:8080", command))
+                	self.api.app.logger.error("Falha ao tentar controlar o ator do FermentWifi: %s/%s" % ("http://fermentwifi.local:80", command))
 
 	def on(self, power=None):
 		if self.usar=="Resfriador":
