@@ -24,6 +24,10 @@ Important!!!
 After install run this command on raspberry pi, without quotes: "sudo ln -s ~/craftbeerpi3/modules/plugins/cbpi_FermentWifi/esp.service /etc/avahi/services/"
 This way the esp8266 can find the craftbeerpi on your network.
 
+Alternatively, you can go into folder ~/craftbeerpi3/modules/plugins and run this command without quotes "git clone https://github.com/tiagoclc/cbpi_FermentWifi.git"
+And after you have to run the command "sudo ln -s ~/craftbeerpi3/modules/plugins/cbpi_FermentWifi/esp.service /etc/avahi/services/", as instructed above.
+
+
 ## Actor Configuration
 1. Add a new actor from the **Hardware Settings** screen, and select the type FermentWifi
 2. Enter the following properties according to the device you wish to control:
