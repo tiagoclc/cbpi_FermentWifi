@@ -68,5 +68,4 @@ def init(cbpi):
 	print "INICIALIZA O MODULO FERMENTWIFI"
 	cbpi.app.register_blueprint(blueprint, url_prefix='/api/fermentwifi')
 	print "READY"
-	os.system("sudo mv ~/craftbeerpi3/modules/plugins/cbpi_FermentWifi/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
 
