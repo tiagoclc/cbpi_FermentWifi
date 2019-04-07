@@ -7,11 +7,12 @@ Baseado nos plugins HTTPActor e HTTPSensor
 O plugin FermentWifi permite que o CraftBeerPi faça a leitura do sensor de temperatura do controlador de temperatura de fermentação FermentWifi Box
 Permite também que comandos sejam enviados para ligar ou desligar o sistema de aquecimento do fermentador, bem como o sistema de resfriamento.
 
-Para que o FermentWifi possa ser utilizado com o CraftBeerPi, a temperatura mínima e a máxima devem ser ajustadas para 0, através do app ou do navegador.
 Lembre-se que o FermentWifi deve estar conectado à mesma rede que o CraftBeerPi.
 
-Importante!!!
-Após a intalação rode o seguinte comando na raspberry pi, sem as aspas: "sudo mv ~/craftbeerpi3/modules/plugins/cbpi_FermentWifi/esp.service /etc/avahi/services/"
+Para que o FermentWifi possa ser utilizado com o CraftBeerPi, basta marcar a opção respectiva. Caso o CrafBeerPi não esteja na mesma rede que o FermentWifi, a opção de utilização com o CraftBeerPi será desativada.
+
+*****Importante****
+Após a intalação rode o seguinte comando na raspberry pi, diretamente ou via ssh, sem as aspas: "sudo mv ~/craftbeerpi3/modules/plugins/cbpi_FermentWifi/esp.service /etc/avahi/services/ | sudo avahi-daemon -r"
 Desta forma, o Esp8266 poderá enxergar o sistema CraftBeerPi na sua rede.
 
 
