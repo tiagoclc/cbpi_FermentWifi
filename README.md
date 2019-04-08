@@ -12,7 +12,7 @@ Lembre-se que o FermentWifi deve estar conectado à mesma rede que o CraftBeerPi
 Para que o FermentWifi possa ser utilizado com o CraftBeerPi, basta marcar a opção respectiva. Caso o CrafBeerPi não esteja na mesma rede que o FermentWifi, a opção de utilização com o CraftBeerPi será desativada.
 
 *****Importante*****
-Após a intalação rode o seguinte comando na raspberry pi, diretamente ou via ssh, sem as aspas: "sudo mv ~/craftbeerpi3/modules/plugins/cbpi_FermentWifi/esp.service /etc/avahi/services/ | sudo avahi-daemon -r"
+Após a intalação rode o seguinte comando na raspberry pi, diretamente ou via ssh, sem as aspas: "sudo mv ~/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r"
 Desta forma, o Esp8266 poderá enxergar o sistema CraftBeerPi na sua rede.
 
 
@@ -23,7 +23,7 @@ Desta forma, o Esp8266 poderá enxergar o sistema CraftBeerPi na sua rede.
 From CraftBeerPi, navigate to the **System** menu and click **Add-Ons**. Find the FermentWifi plugin and click Download.  You will then have to reboot your Pi for the plugin to become available. 
 
 *****Important***** 
-After install run this command on raspberry pi, without quotes: "sudo mv ~/craftbeerpi3/modules/plugins/cbpi_FermentWifi/esp.service /etc/avahi/services/"
+After install run this command on raspberry pi, without quotes: "sudo mv ~/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/"
 This way the esp8266 can find the craftbeerpi on your network.
 
 
