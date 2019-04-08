@@ -32,15 +32,15 @@ class FermentWifiActor(ActorBase):
 
 	def on(self, power=None):
 		if self.usar=="Resfriador":
-			self.send("ControleCraftLiga?pino=14&estado=1")
+			self.send("C?p=14&e=1")
 		elif self.usar=="Aquecedor":
-			self.send("ControleCraftLiga?pino=12&estado=1")
+			self.send("C?p=12&e=1")
 
 	def off(self):
 		if self.usar=="Resfriador":
-			self.send("ControleCraftDesliga?pino=14&estado=0")
+			self.send("Co?p=14&e=0")
 		elif self.usar=="Aquecedor":
-			self.send("ControleCraftDesliga?pino=12&estado=0")
+			self.send("Co?p=12&e=0")
 
 @cbpi.sensor
 class FermentWifiSensor(SensorActive):
@@ -68,5 +68,5 @@ def init(cbpi):
 	print "INICIALIZA O MODULO FERMENTWIFI"
 	cbpi.app.register_blueprint(blueprint, url_prefix='/api/fermentwifi')
 	print "READY"
-
 	os.system("sudo mv ~/craftbeerpi3/modules/plugins/cbpi_FermentWifi/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
+
