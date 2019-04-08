@@ -42,11 +42,31 @@ class FermentWifiActor(ActorBase):
 		elif self.usar=="Aquecedor":
 			self.send("ControleCraftDesliga?pino=12&estado=0")
 
+@cbpi.sensor
+class FermentWifiSensor(SensorActive):
+	key = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
+	def execute(self):
+		global cache
+		while self.is_running():
+			try:
+				value = cache.pop(self.key, None)
+				if value is not None:
+					self.data_received(value)
+			except:
+				pass
+	
+			self.api.socketio.sleep(1)
+
+@blueprint.route('/<id>/<value>', methods=['GET'])
+def set_temp(id, value):
+	global cache
+	cache[id] = value
+	return ('', 204)
 
 @cbpi.initalizer()
 def init(cbpi):
 	print "INICIALIZA O MODULO FERMENTWIFI"
-	cbpi.app.register_blueprint(blueprint, url_prefix='/api/fermentwifiactor')
+	cbpi.app.register_blueprint(blueprint, url_prefix='/api/fermentwifi')
 	print "READY"
 
 	os.system("sudo mv ~/craftbeerpi3/modules/plugins/cbpi_FermentWifi/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
