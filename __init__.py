@@ -41,7 +41,7 @@ class MQTTThread (threading.Thread):
 class FermentWifiActor(ActorBase):
 	usar = Property.Select("O que utilizar do FermentWifi", options=["Aquecedor", "Resfriador"], description="Escolher o que usar do FermentWifi")
 	topic = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
-	topic=topic+"_Raspi"
+	topic=topic
 	
 	def on(self, power=100):
         
@@ -65,7 +65,7 @@ class FermentWifiSensor(SensorActive):
     
     a_topic = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
 	
-    a_topic=a_topic+"_Raspi"
+    a_topic=a_topic
 
     last_value = None
     def init(self):
