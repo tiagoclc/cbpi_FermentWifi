@@ -144,7 +144,8 @@ def initMQTT(app):
                 api.receive_sensor_value(m.get("id"), m.get("value"))
             except:
                 pass
+	
+	
+    cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
 
-
-#os.system("sudo mv ~/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
-cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
+os.system("sudo mv ~/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
