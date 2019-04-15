@@ -79,6 +79,7 @@ class FermentWifiSensor(SensorActive):
         def on_message(client, userdata, msg):
             
             try:
+                print self.topic
                 print "payload " + msg.payload        
                 json_data = json.loads(msg.payload)
                 #print json_data
