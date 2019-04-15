@@ -39,36 +39,24 @@ class MQTTThread (threading.Thread):
 
 @cbpi.actor
 class FermentWifiActor(ActorBase):
-
-
-
 	usar = Property.Select("O que utilizar do FermentWifi", options=["Aquecedor", "Resfriador"], description="Escolher o que usar do FermentWifi")
-
-    topic = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
+	topic = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
+	topic=topic+"_Raspi"
 	
-    topic=topic+"_Raspi"
-
-    def on(self, power=100):
+	def on(self, power=100):
         
    		if self.usar=="Resfriador":
-			#self.send("C?p=14&e=1")
-			#self.send("ControleCraftLiga?pino=14&estado=1")
-			
-			self.api.cache["mqtt"].client.publish(self.topic, payload=0, qos=2, retain=True)
+   			self.api.cache["mqtt"].client.publish(self.topic, payload=0, qos=2, retain=True)
 			
 		elif self.usar=="Aquecedor":
-			#self.send("C?p=12&e=1")
 			self.api.cache["mqtt"].client.publish(self.topic,payload=1, qos=2, retain=True)
-        
-    def off(self):
+	
+	def off(self):
+   		
    		if self.usar=="Resfriador":
-			#self.send("C?p=14&e=1")
-			#self.send("ControleCraftLiga?pino=14&estado=1")
-			
-			self.api.cache["mqtt"].client.publish(self.topic, payload=2, qos=2, retain=True)
+   			self.api.cache["mqtt"].client.publish(self.topic, payload=2, qos=2, retain=True)
 			
 		elif self.usar=="Aquecedor":
-			#self.send("C?p=12&e=1")
 			self.api.cache["mqtt"].client.publish(self.topic,payload=3, qos=2, retain=True)
 			
 
