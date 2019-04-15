@@ -92,7 +92,7 @@ class FermentWifiSensor(SensorActive):
 
 
     def get_value(self):
-        return {"value": self.last_value}
+        return {"value": self.last_value, "unit": self.unit}
 
     def stop(self):
         self.api.cache["mqtt"].client.unsubscribe(self.topic)
