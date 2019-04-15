@@ -47,18 +47,18 @@ class FermentWifiActor(ActorBase):
 	def on(self, power=100):
         
    		if self.usar=="Resfriador":
-   			self.api.cache["mqtt"].client.publish(self.topic+"_Raspi", payload=0, qos=2, retain=True)
+   			self.api.cache["mqtt"].client.publish(self.topic+"_Raspi", 0, qos=2, retain=True)
 			
 		elif self.usar=="Aquecedor":
-			self.api.cache["mqtt"].client.publish(self.topic+"_Raspi",payload=1, qos=2, retain=True)
+			self.api.cache["mqtt"].client.publish(self.topic+"_Raspi", 1, qos=2, retain=True)
 	
 	def off(self):
    		
    		if self.usar=="Resfriador":
-   			self.api.cache["mqtt"].client.publish(self.topic+"_Raspi", payload=2, qos=2, retain=True)
+   			self.api.cache["mqtt"].client.publish(self.topic+"_Raspi", 2, qos=2, retain=True)
 			
 		elif self.usar=="Aquecedor":
-			self.api.cache["mqtt"].client.publish(self.topic+"_Raspi",payload=3, qos=2, retain=True)
+			self.api.cache["mqtt"].client.publish(self.topic+"_Raspi", 3, qos=2, retain=True)
 			
 
 @cbpi.sensor
