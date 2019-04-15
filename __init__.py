@@ -28,8 +28,8 @@ class MQTTThread (threading.Thread):
         self.client = mqtt.Client()
         self.client.on_connect = on_connect
 
-        #if self.username != "username" and self.password != "password":
-        #    self.client.username_pw_set(self.username, self.password)
+        if self.username != "username" and self.password != "password":
+            self.client.username_pw_set(self.username, self.password)
         
         if self.tls.lower() == 'true':
             self.client.tls_set_context(context=None)
@@ -46,7 +46,7 @@ class FermentWifiActor(ActorBase):
 
     topic = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
 	
-	topic=topic+"_Raspi"
+    topic=topic+"_Raspi"
 
     def on(self, power=100):
         
@@ -54,22 +54,22 @@ class FermentWifiActor(ActorBase):
 			#self.send("C?p=14&e=1")
 			#self.send("ControleCraftLiga?pino=14&estado=1")
 			
-			self.api.cache["mqtt"].client.publish(self.topic, payload="0", qos=2, retain=True)
+			self.api.cache["mqtt"].client.publish(self.topic, payload=0, qos=2, retain=True)
 			
 		elif self.usar=="Aquecedor":
 			#self.send("C?p=12&e=1")
-			self.api.cache["mqtt"].client.publish(self.topic,payload="1", qos=2, retain=True)
+			self.api.cache["mqtt"].client.publish(self.topic,payload=1, qos=2, retain=True)
         
     def off(self):
    		if self.usar=="Resfriador":
 			#self.send("C?p=14&e=1")
 			#self.send("ControleCraftLiga?pino=14&estado=1")
 			
-			self.api.cache["mqtt"].client.publish(self.topic, payload="2", qos=2, retain=True)
+			self.api.cache["mqtt"].client.publish(self.topic, payload=2, qos=2, retain=True)
 			
 		elif self.usar=="Aquecedor":
 			#self.send("C?p=12&e=1")
-			self.api.cache["mqtt"].client.publish(self.topic,payload="3", qos=2, retain=True)
+			self.api.cache["mqtt"].client.publish(self.topic,payload=3, qos=2, retain=True)
 			
 
 @cbpi.sensor
@@ -77,9 +77,7 @@ class FermentWifiSensor(SensorActive):
     
     a_topic = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
 	
-    a_topic=topic+"_Raspi"
-
-    c_unit = Property.Text("Unit", configurable=True, default_value="", description="Units to display")
+    a_topic=a_topic+"_Raspi"
 
     last_value = None
     def init(self):
@@ -110,9 +108,6 @@ class FermentWifiSensor(SensorActive):
     def get_value(self):
         return {"value": self.last_value, "unit": self.unit}
 
-    def get_unit(self):
-        return self.unit
-
     def stop(self):
         self.api.cache["mqtt"].client.unsubscribe(self.topic)
         SensorActive.stop(self)
@@ -129,7 +124,7 @@ def initMQTT(app):
 
     server = app.get_config_parameter("MQTT_SERVER",None)
     if server is None:
-        server = "127.0.0.1"
+        server = "localhost"
         cbpi.add_config_parameter("MQTT_SERVER", "localhost", "text", "MQTT Server")
 
     port = app.get_config_parameter("MQTT_PORT", None)
