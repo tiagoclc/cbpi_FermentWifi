@@ -68,8 +68,7 @@ class FermentWifiSensor(SensorActive):
     def init(self):
         self.topic = self.a_topic
         self.payload_text = "0"
-  		
-		self.unit = "ºC"
+        self.unit = "ºC"
         
         SensorActive.init(self)
         def on_message(client, userdata, msg):
