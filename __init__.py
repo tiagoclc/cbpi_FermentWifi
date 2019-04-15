@@ -78,19 +78,18 @@ class FermentWifiActor(ActorBase):
 
 @cbpi.sensor
 class FermentWifiSensor(SensorActive):
-    a_topic = Property.Text("Topic", configurable=True, default_value="", description="MQTT TOPIC")
-    b_payload = Property.Text("Payload Dictioanry", configurable=True, default_value="", description="Where to find msg in patload, leave blank for raw payload")
+    
+    a_topic = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
+	
+    a_topic=topic+"_Raspi"
+
     c_unit = Property.Text("Unit", configurable=True, default_value="", description="Units to display")
 
     last_value = None
     def init(self):
         self.topic = self.a_topic
-        if self.b_payload == "":
-            self.payload_text = None
-        else:
-            self.payload_text = self.b_payload.split('.')
-        self.unit = self.c_unit[0:3]
-
+        self.payload_text = None
+  
         SensorActive.init(self)
         def on_message(client, userdata, msg):
             
