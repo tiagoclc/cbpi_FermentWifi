@@ -25,13 +25,7 @@ class MQTTThread (threading.Thread):
     def run(self):
         self.client = mqtt.Client()
         self.client.on_connect = on_connect
-
-        if self.username != "username" and self.password != "password":
-            self.client.username_pw_set(self.username, self.password)
-        
-        if self.tls.lower() == 'true':
-            self.client.tls_set_context(context=None)
-
+               
         self.client.connect(str(self.server), int(self.port), 60)
         self.client.loop_forever()
 
