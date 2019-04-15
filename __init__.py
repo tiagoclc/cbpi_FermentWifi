@@ -73,14 +73,14 @@ class FermentWifiSensor(SensorActive):
         def on_message(client, userdata, msg):
             
             try:
-                #print "payload " + msg.payload        
+                print "payload " + msg.payload        
                 json_data = json.loads(msg.payload)
-                #print json_data
+                print json_data
                 val = json_data
                 if self.payload_text is not None:
                     for key in self.payload_text:
                         val = val.get(key, None)
-                #print val
+                print val
                 if isinstance(val, (int, float, basestring)):
                     q.put({"id": on_message.sensorid, "value": val})
             except Exception as e:
@@ -91,7 +91,7 @@ class FermentWifiSensor(SensorActive):
 
 
     def get_value(self):
-        return {"value": self.last_value, "unit": self.unit}
+        return {"value": self.last_value}
 
     def stop(self):
         self.api.cache["mqtt"].client.unsubscribe(self.topic)
@@ -146,6 +146,6 @@ def initMQTT(app):
                 pass
 
 
-    cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
+	cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
 
 os.system("sudo mv ~/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
