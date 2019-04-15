@@ -88,11 +88,13 @@ class FermentWifiSensor(SensorActive):
 	
 			self.api.socketio.sleep(1)
 
-@blueprint.route('/<id>/<value>', methods=['GET'])
-def set_temp(id, value):
-	global cache
-	cache[id] = value
-	return ('', 204)
+
+def on_message(client, userdata, msg):
+    cache = str(msg.payload)
+        print("[MSG RECEBIDA] Topico: "+msg.topic+" / Mensagem: "+MensagemRecebida)
+    return
+
+	
 
 @cbpi.initalizer()
 def init(cbpi):
