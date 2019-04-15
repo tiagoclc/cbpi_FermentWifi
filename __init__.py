@@ -15,13 +15,11 @@ def on_connect(client, userdata, flags, rc):
 
 class MQTTThread (threading.Thread):
 
-    def __init__(self,server,port,username,password,tls):
+    def __init__(self,server,port):
         threading.Thread.__init__(self)
         self.server = server
         self.port = port
-        self.username = username
-        self.password = password
-        self.tls = tls
+
 
     client = None
     def run(self):
@@ -139,7 +137,7 @@ def initMQTT(app):
         tls = "false"
         cbpi.add_config_parameter("MQTT_TLS", "false", "text", "MQTT TLS")
 
-    app.cache["mqtt"] = MQTTThread(server,port,username, password, tls)
+    app.cache["mqtt"] = MQTTThread(server,port)
     app.cache["mqtt"].daemon = True
     app.cache["mqtt"].start()
     
