@@ -40,7 +40,9 @@ class MQTTThread (threading.Thread):
 @cbpi.actor
 class FermentWifiActor(ActorBase):
 	usar = Property.Select("O que utilizar do FermentWifi", options=["Aquecedor", "Resfriador"], description="Escolher o que usar do FermentWifi")
-	topic = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
+	d = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
+	topic=d+"_Raspi"
+	
 	
 	def on(self, power=100):
         
