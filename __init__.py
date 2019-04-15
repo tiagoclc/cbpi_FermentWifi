@@ -64,10 +64,10 @@ class FermentWifiSensor(SensorActive):
     
     a_topic = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
 	
-    last_value = None
+    last_value = 0
     def init(self):
         self.topic = self.a_topic
-        self.payload_text = "0"
+        self.payload_text = None
         self.unit = "ºC"
         
         SensorActive.init(self)
@@ -76,7 +76,7 @@ class FermentWifiSensor(SensorActive):
             try:
                 print "payload " + msg.payload        
                 json_data = json.loads(msg.payload)
-                print json_data
+                #print json_data
                 val = json_data
                 if self.payload_text is not None:
                     for key in self.payload_text:
