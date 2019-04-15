@@ -8,10 +8,6 @@ import os, re, threading, time
 from modules.core.props import Property
 
 
-
-blueprint = Blueprint('FermentWifi', __name__)
-
-
 q = Queue()
 
 def on_connect(client, userdata, flags, rc):
@@ -169,8 +165,7 @@ def initMQTT(app):
             except:
                 pass
 
-cbpi.app.register_blueprint(blueprint, url_prefix='/api/fermentwifi')
-	
+
 os.system("sudo mv ~/craftbeerpi3/modules/plugins/cbpi_FermentWifi/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
 
 cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
