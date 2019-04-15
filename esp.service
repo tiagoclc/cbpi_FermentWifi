@@ -1,9 +1,9 @@
 <?xml version="1.0" standalone='no'?><!--*-nxml-*-->
 <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
 <service-group>
-        <name replace-wildcards="yes">espserver</name>
+        <name replace-wildcards="yes">MQTT_Server</name>
         <service>
-                <type>_esp._tcp</type>
-                <port>5000</port>
+                <type>_mqtt._tcp</type>
+                <port>1883</port>
         </service>
 </service-group>
