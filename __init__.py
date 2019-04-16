@@ -39,18 +39,18 @@ class FermentWifiActor(ActorBase):
 	def on(self, power=100):
         
    		if self.usar=="Resfriador":
-   			self.api.cache["mqtt"].client.publish(self.topic+"_Raspi", 0, qos=2, retain=True)
+   			self.client.publish(self.topic+"_Raspi", 0, qos=2, retain=True)
 			
 		elif self.usar=="Aquecedor":
-			self.api.cache["mqtt"].client.publish(self.topic+"_Raspi", 1, qos=2, retain=True)
+			self.client.publish(self.topic+"_Raspi", 1, qos=2, retain=True)
 	
 	def off(self):
    		
    		if self.usar=="Resfriador":
-   			self.api.cache["mqtt"].client.publish(self.topic+"_Raspi", 2, qos=2, retain=True)
+   			self.client.publish(self.topic+"_Raspi", 2, qos=2, retain=True)
 			
 		elif self.usar=="Aquecedor":
-			self.api.cache["mqtt"].client.publish(self.topic+"_Raspi", 3, qos=2, retain=True)
+			self.client.publish(self.topic+"_Raspi", 3, qos=2, retain=True)
 			
 
 @cbpi.sensor
@@ -85,8 +85,8 @@ class FermentWifiSensor(SensorActive):
             except Exception as e:
                 print e
         on_message.sensorid = self.id
-        self.api.cache["mqtt"].client.subscribe(self.topic)
-        self.api.cache["mqtt"].client.message_callback_add(self.topic, on_message)
+        self.client.subscribe(self.topic)
+        self.client.message_callback_add(self.topic, on_message)
 
 
     def get_value(self):
