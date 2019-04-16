@@ -108,28 +108,14 @@ def initMQTT(app):
 
     server = app.get_config_parameter("MQTT_SERVER",None)
     if server is None:
-        server = "localhost"
-        cbpi.add_config_parameter("MQTT_SERVER", "localhost", "text", "MQTT Server")
+        server = "127.0.0.1"
+        cbpi.add_config_parameter("MQTT_SERVER", "127.0.0.1", "text", "MQTT Server")
 
     port = app.get_config_parameter("MQTT_PORT", None)
     if port is None:
         port = "1883"
         cbpi.add_config_parameter("MQTT_PORT", "1883", "text", "MQTT Sever Port")
 
-    username = app.get_config_parameter("MQTT_USERNAME", None)
-    if username is None:
-        username = ""
-        cbpi.add_config_parameter("MQTT_USERNAME", "username", "text", "MQTT username")
-
-    password = app.get_config_parameter("MQTT_PASSWORD", None)
-    if password is None:
-        password = ""
-        cbpi.add_config_parameter("MQTT_PASSWORD", "password", "text", "MQTT password")
-
-    tls = app.get_config_parameter("MQTT_TLS", None)
-    if tls is None:
-        tls = "false"
-        cbpi.add_config_parameter("MQTT_TLS", "false", "text", "MQTT TLS")
 
     app.cache["mqtt"] = MQTTThread(server,port)
     app.cache["mqtt"].daemon = True
