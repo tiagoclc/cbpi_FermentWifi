@@ -41,8 +41,11 @@ class FermentWifiActor(ActorBase):
 	def on(self, power=None):
 		if self.usar=="Resfriador":
 			mqttc.publish(self.topico0,"0")
+			print("enviado liga resfriador")
 		elif self.usar=="Aquecedor":
 			mqttc.publish(self.topico0,"1")
+			print("enviado liga aquecedor")
+
 
 	def off(self):
 		if self.usar=="Resfriador":
