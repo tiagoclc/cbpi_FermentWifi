@@ -30,28 +30,23 @@ class FermentWifiActor(ActorBase):
 	key0 = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
 	
 	topico0=str(key0)+"_Raspi"
-	
-	def send(self, command):
-        	try:
-                	h = httplib2.Http(".cache")
-	                (resp, content) = h.request("%s/%s" % ("http://fermentwifi.local:80", command), "GET", headers={'cache-control':'no-cache'})
-        	except Exception as e:
-                	self.api.app.logger.error("Falha ao tentar controlar o ator do FermentWifi: %s/%s" % ("http://fermentwifi.local:80", command))
 
 	def on(self, power=None):
 		if self.usar=="Resfriador":
 			mqttc.publish(self.topico0,"0")
 			print("enviado liga resfriador")
+			print(topico)
 		elif self.usar=="Aquecedor":
 			mqttc.publish(self.topico0,"1")
 			print("enviado liga aquecedor")
-
+			print(topico)
 
 	def off(self):
 		if self.usar=="Resfriador":
 			mqttc.publish(self.topico0,"2")
 		elif self.usar=="Aquecedor":
 			mqttc.publish(self.topico0,"3")
+			print(topico)
 
 @cbpi.sensor
 class FermentWifiSensor(SensorActive):
