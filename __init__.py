@@ -28,7 +28,9 @@ class FermentWifiActor(ActorBase):
 
 
 	key0 = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
-
+	
+	topico0=self.key0+"_Raspi"
+	
 	def send(self, command):
         	try:
                 	h = httplib2.Http(".cache")
@@ -38,19 +40,21 @@ class FermentWifiActor(ActorBase):
 
 	def on(self, power=None):
 		if self.usar=="Resfriador":
-	      mqttc.publish(self.key0+"_Raspi","0")
+			mqttc.publish(self.topico0,"0")
 		elif self.usar=="Aquecedor":
-	      mqttc.publish(self.key0+"_Raspi","1")
+			mqttc.publish(self.topico0,"1")
 
 	def off(self):
 		if self.usar=="Resfriador":
-	      mqttc.publish(self.key0+"_Raspi","2")
+			mqttc.publish(self.topico0,"2")
 		elif self.usar=="Aquecedor":
-	      mqttc.publish(self.key0+"_Raspi","3")
+			mqttc.publish(self.topico0,"3")
 
 @cbpi.sensor
 class FermentWifiSensor(SensorActive):
 	key = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
+	topico=self.key+"_Raspi"
+	
 	def execute(self):
 		global cache
 		while self.is_running():
@@ -74,4 +78,4 @@ def init(cbpi):
 	print "INICIALIZA O MODULO FERMENTWIFI"
 	cbpi.app.register_blueprint(blueprint, url_prefix='/api/fermentwifi')
 	print "READY"
-os.system("sudo mv ~/craftbeerpi3/modules/plugins/cbpi_FermentWifi/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
+os.system("sudo mv ~/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
