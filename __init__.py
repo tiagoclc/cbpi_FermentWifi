@@ -19,7 +19,7 @@ mqttc=mqtt.Client()
 mqttc.connect("localhost",1883,60)
 mqttc.loop_start()
 
-
+q = Queue()
 
 @cbpi.actor
 class FermentWifiActor(ActorBase):
@@ -64,7 +64,7 @@ class FermentWifiSensor(SensorActive):
         def init(self):
                 self.topic=self.key+"_Raspi"
 
-                        self.payload_text = None
+                self.payload_text = "0"
 
                 self.unit = "ºC"
 
