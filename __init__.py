@@ -54,18 +54,18 @@ class FermentWifiActor(ActorBase):
 
 			mqttc.publish(self.topic,"3")
 			print(self.topic)
-
+			
 
 @cbpi.sensor
 class FermentWifiSensor(SensorActive):
 	key = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
-
+	
 	last_value = None
 	def init(self):
 		self.topic=self.key+"_Raspi"
 		if self.b_payload == "":
 			self.payload_text = None
-    	else:
+		else:
     		self.payload_text = self.b_payload.split('.')
     	
     	self.unit = "ºC"
