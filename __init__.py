@@ -35,18 +35,18 @@ class FermentWifiActor(ActorBase):
 		if self.usar=="Resfriador":
 			mqttc.publish(self.topico0,"0")
 			print("enviado liga resfriador")
-			print(topico)
+			print(self.topico0)
 		elif self.usar=="Aquecedor":
 			mqttc.publish(self.topico0,"1")
 			print("enviado liga aquecedor")
-			print(topico)
+			print(self.topico0)
 
 	def off(self):
 		if self.usar=="Resfriador":
 			mqttc.publish(self.topico0,"2")
 		elif self.usar=="Aquecedor":
 			mqttc.publish(self.topico0,"3")
-			print(topico)
+			print(self.topico0)
 
 @cbpi.sensor
 class FermentWifiSensor(SensorActive):
