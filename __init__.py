@@ -33,7 +33,8 @@ class FermentWifiActor(ActorBase):
 
 	def on(self, power=None):
 		if self.usar=="Resfriador":
-			self.topic=self.key0+"_Raspi"
+			self.topic=self.key0+"_RaspiOnOff"
+			
 			mqttc.publish(self.topic,"0")
 			print("enviado liga resfriador")
 			print(self.topic)
