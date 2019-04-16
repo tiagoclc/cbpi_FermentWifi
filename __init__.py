@@ -58,54 +58,53 @@ class FermentWifiActor(ActorBase):
 
 @cbpi.sensor
 class FermentWifiSensor(SensorActive):
-	key = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
-	
-	last_value = None
-	def init(self):
-		self.topic=self.key+"_Raspi"
-		if self.b_payload == "":
-			self.payload_text = None
-		else:
-    		self.payload_text = self.b_payload.split('.')
-    	
-    	self.unit = "ºC"
+        key = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
 
-        SensorActive.init(self)
-        def on_message(client, userdata, msg):
+        last_value = None
+        def init(self):
+                self.topic=self.key+"_Raspi"
+                if self.b_payload == "":
+                        self.payload_text = None
+                else:
+                        self.payload_text = self.b_payload.split('.')
+                self.unit = "ºC"
+
+
+                SensorActive.init(self)
+                def on_message(client, userdata, msg):
             
-            try:
-                print "payload " + msg.payload        
-                json_data = json.loads(msg.payload)
-                #print json_data
-                val = json_data
-                if self.payload_text is not None:
-                    for key in self.payload_text:
-                        val = val.get(key, None)
-                #print val
-                if isinstance(val, (int, float, basestring)):
-                	q.put({"id": on_message.sensorid, "value": val})
-            except Exception as e:
-                print e
-        on_message.sensorid = self.id
-        mqttc.subscribe(self.topic)
-		mqttc.message_callback_add(self.topic, on_message)
-	
-	
-	    def get_value(self):
-        return {"value": self.last_value, "unit": self.unit}
+                        try:
+                                print "payload " + msg.payload        
+                                json_data = json.loads(msg.payload)
+                                #print json_data
+                                val = json_data
+                                if self.payload_text is not None:
+                                        for key in self.payload_text:
+                                                val = val.get(key, None)
+                                #print val
+                                if isinstance(val, (int, float, basestring)):
+                                        q.put({"id": on_message.sensorid, "value": val})
+                        except Exception as e:
+                                print e
+                on_message.sensorid = self.id
+                mqttc.subscribe(self.topic)
+                mqttc.message_callback_add(self.topic, on_message)
+        
+        def get_value(self):
+                return {"value": self.last_value, "unit": self.unit}
 
 
 
-    def stop(self):
-        mqttc.unsubscribe(self.topic)
-        SensorActive.stop(self)
+        def stop(self):
+                mqttc.unsubscribe(self.topic)
+                SensorActive.stop(self)
 
-    def execute(self):
-        '''
-        Active sensor has to handle his own loop
-        :return: 
-        '''
-        self.sleep(5)
+        def execute(self):
+                '''
+                Active sensor has to handle his own loop
+                :return: 
+                '''
+                self.sleep(5)
 
 
 
