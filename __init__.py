@@ -1,136 +1,77 @@
 # -*- coding: utf-8 -*-
 import paho.mqtt.client as mqtt
-from eventlet import Queue
-from modules import cbpi, app, ActorBase
-from modules.core.hardware import SensorActive
-import json
-import os, re, threading, time
+import os
+from subprocess import Popen, PIPE, call
+from modules import cbpi
+from modules.core.hardware import ActorBase, SensorPassive, SensorActive
 from modules.core.props import Property
+import json
+import httplib2
+from flask import Blueprint, render_template, jsonify, request
 
 
-q = Queue()
-
-def on_connect(client, userdata, flags, rc):
-    print("MQTT Connected" + str(rc))
-
-class MQTTThread (threading.Thread):
-
-    def __init__(self,server,port):
-        threading.Thread.__init__(self)
-        self.server = server
-        self.port = port
 
 
-    client = None
-    def run(self):
-        self.client = mqtt.Client()
-        self.client.on_connect = on_connect
-               
-        self.client.connect(str(self.server), int(self.port), 60)
-        self.client.loop_forever()
+blueprint = Blueprint('FermentWifi', __name__)
+cache = {}
+
+mqttc=mqtt.Client()
+mqttc.connect("localhost",1883,60)
+mqttc.loop_start()
+
+
 
 @cbpi.actor
 class FermentWifiActor(ActorBase):
+
 	usar = Property.Select("O que utilizar do FermentWifi", options=["Aquecedor", "Resfriador"], description="Escolher o que usar do FermentWifi")
-	topic = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
-	#topic="%d_Raspi"
-	
-	
-	def on(self, power=100):
-        
-   		if self.usar=="Resfriador":
-   			self.api.cache["mqtt"].client.publish(self.topic+"_Raspi", 0, qos=2, retain=True)
-			
+
+
+	key0 = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
+
+	def send(self, command):
+        	try:
+                	h = httplib2.Http(".cache")
+	                (resp, content) = h.request("%s/%s" % ("http://fermentwifi.local:80", command), "GET", headers={'cache-control':'no-cache'})
+        	except Exception as e:
+                	self.api.app.logger.error("Falha ao tentar controlar o ator do FermentWifi: %s/%s" % ("http://fermentwifi.local:80", command))
+
+	def on(self, power=None):
+		if self.usar=="Resfriador":
+	      mqttc.publish(self.key0+"_Raspi","0")
 		elif self.usar=="Aquecedor":
-			self.api.cache["mqtt"].client.publish(self.topic+"_Raspi", 1, qos=2, retain=True)
-	
+	      mqttc.publish(self.key0+"_Raspi","1")
+
 	def off(self):
-   		
-   		if self.usar=="Resfriador":
-   			self.api.cache["mqtt"].client.publish(self.topic+"_Raspi", 2, qos=2, retain=True)
-			
+		if self.usar=="Resfriador":
+	      mqttc.publish(self.key0+"_Raspi","2")
 		elif self.usar=="Aquecedor":
-			self.api.cache["mqtt"].client.publish(self.topic+"_Raspi", 3, qos=2, retain=True)
-			
+	      mqttc.publish(self.key0+"_Raspi","3")
 
 @cbpi.sensor
 class FermentWifiSensor(SensorActive):
-    
-    a_topic = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
-    
-    #a_topic="%e_Raspi"
+	key = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
+	def execute(self):
+		global cache
+		while self.is_running():
+			try:
+				value = cache.pop(self.key, None)
+				if value is not None:
+					self.data_received(value)
+			except:
+				pass
 	
-	
-    last_value = 0
-    def init(self):
-        self.topic = self.a_topic+"_Raspi"
-        self.payload_text = None
-        self.unit = "ºC"
-        
-        SensorActive.init(self)
-        def on_message(client, userdata, msg):
-            
-            try:
-                print self.topic
-                print "payload " + msg.payload        
-                json_data = json.loads(msg.payload)
-                #print json_data
-                val = json_data
-                if self.payload_text is not None:
-                    for key in self.payload_text:
-                        val = val.get(key, None)
-                print val
-                if isinstance(val, (int, float, basestring)):
-                    q.put({"id": on_message.sensorid, "value": val})
-            except Exception as e:
-                print e
-        on_message.sensorid = self.id
-        self.api.cache["mqtt"].client.subscribe(self.topic)
-        self.api.cache["mqtt"].client.message_callback_add(self.topic, on_message)
+			self.api.socketio.sleep(1)
 
+@blueprint.route('/<id>/<value>', methods=['GET'])
+def set_temp(id, value):
+	global cache
+	cache[id] = value
+	return ('', 204)
 
-    def get_value(self):
-        return {"value": self.last_value, "unit": self.unit}
-
-    def stop(self):
-        self.api.cache["mqtt"].client.unsubscribe(self.topic)
-        SensorActive.stop(self)
-
-    def execute(self):
-        '''
-        Active sensor has to handle his own loop
-        :return: 
-        '''
-        self.sleep(5)
-
-@cbpi.initalizer(order=0)
-def initMQTT(app):
-
-    server = app.get_config_parameter("MQTT_SERVER",None)
-    if server is None:
-        server = "127.0.0.1"
-        cbpi.add_config_parameter("MQTT_SERVER", "127.0.0.1", "text", "MQTT Server")
-
-    port = app.get_config_parameter("MQTT_PORT", None)
-    if port is None:
-        port = "1883"
-        cbpi.add_config_parameter("MQTT_PORT", "1883", "text", "MQTT Sever Port")
-
-
-    app.cache["mqtt"] = MQTTThread(server,port)
-    app.cache["mqtt"].daemon = True
-    app.cache["mqtt"].start()
-    
-    def mqtt_reader(api):
-        while True:
-            try:
-                m = q.get(timeout=0.1)
-                api.cache.get("sensors")[m.get("id")].instance.last_value = m.get("value")
-                api.receive_sensor_value(m.get("id"), m.get("value"))
-            except:
-                pass
-
-
-	cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
-
-os.system("sudo mv ~/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
+@cbpi.initalizer()
+def init(cbpi):
+	print "INICIALIZA O MODULO FERMENTWIFI"
+	cbpi.app.register_blueprint(blueprint, url_prefix='/api/fermentwifi')
+	print "READY"
+os.system("sudo mv ~/craftbeerpi3/modules/plugins/cbpi_FermentWifi/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
