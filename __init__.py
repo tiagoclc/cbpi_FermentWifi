@@ -29,7 +29,7 @@ class FermentWifiActor(ActorBase):
 
 	key0 = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
 	
-	topico0=key0+"_Raspi"
+	topico0=str(key0)+"_Raspi"
 	
 	def send(self, command):
         	try:
@@ -53,7 +53,7 @@ class FermentWifiActor(ActorBase):
 @cbpi.sensor
 class FermentWifiSensor(SensorActive):
 	key = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
-	topico=key+"_Raspi"
+	topico=str(key)+"_Raspi"
 	
 	def execute(self):
 		global cache
