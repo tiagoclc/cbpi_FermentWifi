@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import paho.mqtt.client as mqtt
+from eventlet import Queue
 import os
 from subprocess import Popen, PIPE, call
 from modules import cbpi
