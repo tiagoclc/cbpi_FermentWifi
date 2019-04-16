@@ -29,17 +29,18 @@ class FermentWifiActor(ActorBase):
 
 	key0 = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
 	
-	topico0=str(key0)+"_Raspi"
+
 
 	def on(self, power=None):
 		if self.usar=="Resfriador":
-			mqttc.publish(self.topico0,"0")
+			self.topic=self.key0+"_Raspi"
+			mqttc.publish(self.topic,"0")
 			print("enviado liga resfriador")
-			print(self.topico0)
+			print(self.topic)
 		elif self.usar=="Aquecedor":
-			mqttc.publish(self.topico0,"1")
+			mqttc.publish(self.topic,"1")
 			print("enviado liga aquecedor")
-			print(self.topico0)
+			print(self.topic)
 
 	def off(self):
 		if self.usar=="Resfriador":
