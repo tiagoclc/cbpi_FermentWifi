@@ -63,10 +63,9 @@ class FermentWifiSensor(SensorActive):
         last_value = None
         def init(self):
                 self.topic=self.key+"_Raspi"
-                if self.b_payload == "":
+
                         self.payload_text = None
-                else:
-                        self.payload_text = self.b_payload.split('.')
+
                 self.unit = "ºC"
 
 
