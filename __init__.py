@@ -113,14 +113,15 @@ def init(cbpi):
         #cbpi.app.register_blueprint(blueprint, url_prefix='/api/fermentwifi')
         
         def mqtt_reader(api):
-        while True:
-                try:
-                        m = q.get(timeout=0.1)
-                        api.cache.get("sensors")[m.get("id")].instance.last_value = m.get("value")
-                        api.receive_sensor_value(m.get("id"), m.get("value"))
-                except:
-                        pass
+        
+                while True:
+                        try:
+                                m = q.get(timeout=0.1)
+                                api.cache.get("sensors")[m.get("id")].instance.last_value = m.get("value")
+                                api.receive_sensor_value(m.get("id"), m.get("value"))
+                        except:
+                                pass
 
-        os.system("sudo mv ~/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
+        os.system("sudo mv ~/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo a$
         print "READY"
 
