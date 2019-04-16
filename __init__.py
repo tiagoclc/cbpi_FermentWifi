@@ -61,12 +61,12 @@ class FermentWifiSensor(SensorActive):
 	key = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
 
     def init(self):
-		self.topic=self.key+"_Raspi"
-        if self.b_payload == "":
-            self.payload_text = None
-        else:
-            self.payload_text = self.b_payload.split('.')
-        self.unit = "ºC"
+    	self.topic=self.key+"_Raspi"
+    	if self.b_payload == "":
+    		self.payload_text = None
+    	else:
+    	self.payload_text = self.b_payload.split('.')
+    	self.unit = "ºC"
 
         SensorActive.init(self)
         def on_message(client, userdata, msg):
@@ -81,7 +81,7 @@ class FermentWifiSensor(SensorActive):
                         val = val.get(key, None)
                 #print val
                 if isinstance(val, (int, float, basestring)):
-                    q.put({"id": on_message.sensorid, "value": val})
+                	q.put({"id": on_message.sensorid, "value": val})
             except Exception as e:
                 print e
         on_message.sensorid = self.id
