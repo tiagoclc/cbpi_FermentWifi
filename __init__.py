@@ -8,8 +8,6 @@ import os, re, threading, time
 from subprocess import Popen, PIPE, call
 from modules.core.props import Property
 
-
-
 cache = {}
 
 q = Queue()
@@ -19,8 +17,6 @@ client = None
 mqttc=mqtt.Client()
 mqttc.connect("localhost",1883,60)
 mqttc.loop_start()
-#mqttc.loop_forever()
-
 
 @cbpi.actor
 class FermentWifiActor(ActorBase):
@@ -111,14 +107,11 @@ class FermentWifiSensor(SensorActive):
 
 
 @cbpi.initalizer(order=0)
-#def init(cbpi):
-#        print "INICIALIZA O MODULO FERMENTWIFI"
-        #cbpi.app.register_blueprint(blueprint, url_prefix='/api/fermentwifi')
 
 def initMQTT(app):
 
         print "INICIALIZA O MODULO FERMENTWIFI"
-        #cbpi.app.register_blueprint(blueprint, url_prefix='/api/fermentwifi')
+
 
         def mqtt_reader(api):
 
