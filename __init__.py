@@ -111,18 +111,20 @@ class FermentWifiSensor(SensorActive):
 
 
 @cbpi.initalizer(order=0)
-def init(cbpi):
-        print "INICIALIZA O MODULO FERMENTWIFI"
+#def init(cbpi):
+#        print "INICIALIZA O MODULO FERMENTWIFI"
         #cbpi.app.register_blueprint(blueprint, url_prefix='/api/fermentwifi')
 
 def initMQTT(app):
 
-		app.cache["mqtt"].daemon = True
-		app.cache["mqtt"].start()
+        print "INICIALIZA O MODULO FERMENTWIFI"
+        #cbpi.app.register_blueprint(blueprint, url_prefix='/api/fermentwifi')
 
-        
+        app.cache["mqtt"].daemon = True
+        app.cache["mqtt"].start()
+
         def mqtt_reader(api):
-        
+
                 while True:
                         try:
                                 m = q.get(timeout=0.1)
@@ -130,8 +132,7 @@ def initMQTT(app):
                                 api.receive_sensor_value(m.get("id"), m.get("value"))
                         except:
                                 pass
-
-		os.system("sudo mv ~/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
-		cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
+        os.system("sudo mv ~/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
+        cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
         print "READY"
 
