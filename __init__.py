@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import paho.mqtt.client as mqtt
 from eventlet import Queue
-import os
+from modules import cbpi, app, ActorBase
+from modules.core.hardware import SensorActive
+import json
+import os, re, threading, time
 from subprocess import Popen, PIPE, call
-from modules import cbpi
-from modules.core.hardware import ActorBase, SensorPassive, SensorActive
 from modules.core.props import Property
-
 from flask import Blueprint, render_template, jsonify, request
 
 
