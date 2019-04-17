@@ -82,6 +82,7 @@ class FermentWifiSensor(SensorActive):
                                 #print val
                                 if isinstance(val, (int, float, basestring)):
                                         q.put({"id": on_message.sensorid, "value": val})
+                                        print(on_message.sensorid+"   "+val)
                         except Exception as e:
                                 print e
                 on_message.sensorid = self.id
