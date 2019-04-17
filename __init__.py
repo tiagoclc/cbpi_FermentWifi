@@ -14,10 +14,12 @@ cache = {}
 
 q = Queue()
 
+client = None
 
 mqttc=mqtt.Client()
 mqttc.connect("localhost",1883,60)
-mqttc.loop_start()
+#mqttc.loop_start()
+mqttc.loop_forever()
 
 
 @cbpi.actor
@@ -119,13 +121,13 @@ def initMQTT(app):
         
                 while True:
                         try:
-                                m = q.get(timeout=1)
+                                m = q.get(timeout=0.1)
                                 api.cache.get("sensors")[m.get("id")].instance.last_value = m.get("value")
                                 api.receive_sensor_value(m.get("id"), m.get("value"))
                         except:
                                 pass
 
-		cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
 		os.system("sudo mv ~/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
+		cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
         print "READY"
 
