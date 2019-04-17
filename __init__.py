@@ -7,8 +7,6 @@ import json
 import os, re, threading, time
 from subprocess import Popen, PIPE, call
 from modules.core.props import Property
-from flask import Blueprint, render_template, jsonify, request
-
 
 
 
@@ -117,6 +115,8 @@ def init(cbpi):
                                 m = q.get(timeout=0.1)
                                 api.cache.get("sensors")[m.get("id")].instance.last_value = m.get("value")
                                 api.receive_sensor_value(m.get("id"), m.get("value"))
+                                print(m.get("id")) 
+                                print(m.get("value"))
                         except:
                                 pass
 
