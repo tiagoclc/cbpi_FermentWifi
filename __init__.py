@@ -12,11 +12,13 @@ from modules.core.props import Property
 
 cache = {}
 
+q = Queue()
+
+
 mqttc=mqtt.Client()
 mqttc.connect("localhost",1883,60)
 mqttc.loop_start()
 
-q = Queue()
 
 @cbpi.actor
 class FermentWifiActor(ActorBase):
@@ -112,7 +114,7 @@ def init(cbpi):
         
                 while True:
                         try:
-                                m = q.get(timeout=0.1)
+                                m = q.get(timeout=1)
                                 api.cache.get("sensors")[m.get("id")].instance.last_value = m.get("value")
                                 api.receive_sensor_value(m.get("id"), m.get("value"))
                                 print(m.get("id")) 
