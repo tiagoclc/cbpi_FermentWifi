@@ -63,7 +63,7 @@ class FermentWifiSensor(SensorActive):
         def init(self):
                 self.topic=self.key+"_Raspi"
 
-                self.payload_text = "0"
+                self.payload_text = None
 
                 self.unit = "ºC"
 
@@ -108,10 +108,12 @@ class FermentWifiSensor(SensorActive):
                 self.sleep(5)
 
 
-@cbpi.initalizer()
+@cbpi.initalizer(order=0)
 def init(cbpi):
         print "INICIALIZA O MODULO FERMENTWIFI"
         #cbpi.app.register_blueprint(blueprint, url_prefix='/api/fermentwifi')
+
+def initMQTT(app):
         
         def mqtt_reader(api):
         
