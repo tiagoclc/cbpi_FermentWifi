@@ -9,6 +9,7 @@ from subprocess import Popen, PIPE, call
 from modules.core.props import Property
 
 
+
 cache = {}
 
 q = Queue()
@@ -119,9 +120,6 @@ def initMQTT(app):
         print "INICIALIZA O MODULO FERMENTWIFI"
         #cbpi.app.register_blueprint(blueprint, url_prefix='/api/fermentwifi')
 
-        app.cache["mqtt"].daemon = True
-        app.cache["mqtt"].start()
-
         def mqtt_reader(api):
 
                 while True:
@@ -131,6 +129,8 @@ def initMQTT(app):
                                 api.receive_sensor_value(m.get("id"), m.get("value"))
                         except:
                                 pass
-        os.system("sudo mv ~/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
+        os.system("sudo mv ~/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/service$
+        cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
         print "READY"
+
 
