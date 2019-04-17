@@ -59,7 +59,7 @@ class FermentWifiActor(ActorBase):
 class FermentWifiSensor(SensorActive):
         key = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
 
-        last_value = None
+        last_value = 0
         def init(self):
                 self.topic=self.key+"_Raspi"
 
