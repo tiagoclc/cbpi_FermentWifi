@@ -116,6 +116,10 @@ def init(cbpi):
         #cbpi.app.register_blueprint(blueprint, url_prefix='/api/fermentwifi')
 
 def initMQTT(app):
+
+		app.cache["mqtt"].daemon = True
+		app.cache["mqtt"].start()
+
         
         def mqtt_reader(api):
         
