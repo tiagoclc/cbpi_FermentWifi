@@ -82,7 +82,9 @@ class FermentWifiSensor(SensorActive):
                                 #print val
                                 if isinstance(val, (int, float, basestring)):
                                         q.put({"id": on_message.sensorid, "value": val})
-                                        print(on_message.sensorid+"   "+val)
+                                        print(on_message.sensorid)
+                                        print("   ")
+                                        print(val)
                         except Exception as e:
                                 print e
                 on_message.sensorid = self.id
@@ -118,8 +120,6 @@ def init(cbpi):
                                 m = q.get(timeout=1)
                                 api.cache.get("sensors")[m.get("id")].instance.last_value = m.get("value")
                                 api.receive_sensor_value(m.get("id"), m.get("value"))
-                                print(m.get("id")) 
-                                print(m.get("value"))
                         except:
                                 pass
 
