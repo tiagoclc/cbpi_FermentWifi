@@ -6,14 +6,12 @@ from subprocess import Popen, PIPE, call
 from modules import cbpi
 from modules.core.hardware import ActorBase, SensorPassive, SensorActive
 from modules.core.props import Property
-import json
-import httplib2
+
 from flask import Blueprint, render_template, jsonify, request
 
 
 
 
-blueprint = Blueprint('FermentWifi', __name__)
 cache = {}
 
 mqttc=mqtt.Client()
@@ -65,7 +63,7 @@ class FermentWifiSensor(SensorActive):
         def init(self):
                 self.topic=self.key+"_Raspi"
 
-                self.payload_text = "0"
+                self.payload_text = None
 
                 self.unit = "ºC"
 
@@ -122,6 +120,7 @@ def init(cbpi):
                         except:
                                 pass
 
+		cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
         os.system("sudo mv ~/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo a$
         print "READY"
 
