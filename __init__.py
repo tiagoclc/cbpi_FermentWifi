@@ -9,7 +9,6 @@ from subprocess import Popen, PIPE, call
 from modules.core.props import Property
 
 
-
 cache = {}
 
 q = Queue()
@@ -18,8 +17,8 @@ client = None
 
 mqttc=mqtt.Client()
 mqttc.connect("localhost",1883,60)
-#mqttc.loop_start()
-mqttc.loop_forever()
+mqttc.loop_start()
+#mqttc.loop_forever()
 
 
 @cbpi.actor
@@ -133,6 +132,5 @@ def initMQTT(app):
                         except:
                                 pass
         os.system("sudo mv ~/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r")
-        cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
         print "READY"
 
