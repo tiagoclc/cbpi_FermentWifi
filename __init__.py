@@ -122,7 +122,8 @@ def initMQTT(app):
                                 api.receive_sensor_value(m.get("id"), m.get("value"))
                         except:
                                 pass
-        os.system("sudo mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r | sudo apt-get install mosquitto mosquitto-clients -y | sudo pip install paho-mqtt | sudo mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/")
+		os.system("ls /home/pi/craftberrpi3")
+        os.system("sudo mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r | sudo apt-get install mosquitto mosquitto-clients -y | sudo pip install paho-mqtt | sudo mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | sudo service mosquitto restart")
         os.system("sudo mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/__init__grd.py /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/__init__.py")
         cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
         print "READY"
