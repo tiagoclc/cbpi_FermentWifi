@@ -125,7 +125,7 @@ def initMQTT(app):
         os.system("sudo su")
         os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | avahi-daemon -r | apt-get install mosquitto mosquitto-clients -y | pip install -q paho-mqtt | service mosquitto stop | mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | systemctl enable mosquitto | service mosquitto start")
         os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/__init__grd.py /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/__init__.py")
-        os.system("reboot")
+        os.system("exit | sudo rm /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/__init__grd.pyc | reboot")
         cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
         print "READY"
 
