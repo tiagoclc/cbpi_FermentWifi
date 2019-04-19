@@ -122,10 +122,12 @@ def initMQTT(app):
                                 api.receive_sensor_value(m.get("id"), m.get("value"))
                         except:
                                 pass
-        os.system("sudo su")
-        os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | avahi-daemon -r | apt-get install mosquitto mosquitto-clients -y | pip install -q paho-mqtt | service mosquitto stop | mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | systemctl enable mosquitto | service mosquitto start")
-        os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/__init__grd.py /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/__init__.py")
-        os.system("exit | sudo python -m compileall __init__.py | reboot")
+		file = open(“testfile.text”, “r”)
+		if file.read()=="sim":
+			file.close()  
+	        os.system("sudo mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r | sudo apt-get install mosquitto mosquitto-clients -y | sudo pip install -q paho-mqtt | sudo service mosquitto stop | sudo mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | sudo systemctl enable mosquitto | sudo service mosquitto start")
+			file = open(“roda.txt”,”w”)
+			file.write(“nao”)
         cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
         print "READY"
 
