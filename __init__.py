@@ -128,6 +128,7 @@ def initMQTT(app):
 			os.system("sudo mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r | sudo apt-get install mosquitto mosquitto-clients -y | sudo pip install -q paho-mqtt | sudo service mosquitto stop | sudo mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | sudo systemctl enable mosquitto | sudo service mosquitto start")
 			file = open("roda.txt","w")
 			file.write("nao")
+		file.close()
         cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
         print "READY"
 
