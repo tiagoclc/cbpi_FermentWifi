@@ -122,7 +122,7 @@ def initMQTT(app):
                                 api.receive_sensor_value(m.get("id"), m.get("value"))
                         except:
                                 pass
-		file = open(“testfile.text”, “r”)
+		file = open(“roda.txt”,“r”)
 		if file.read()=="sim":
 			file.close()  
 			os.system("sudo mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r | sudo apt-get install mosquitto mosquitto-clients -y | sudo pip install -q paho-mqtt | sudo service mosquitto stop | sudo mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | sudo systemctl enable mosquitto | sudo service mosquitto start")
