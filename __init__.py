@@ -16,7 +16,7 @@ if file.read()=="sim":
 	file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","w")
 	file.write("nao")
 	file.close()
-	#os.system("reboot")
+	os.system("reboot")
 else:
 	file.close()
 
@@ -142,7 +142,7 @@ def initMQTT(app):
 		file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","w")
 		file.write("nao")
 		file.close()
-		#os.system("reboot")
+		os.system("reboot")
 	else:
 		file.close()
 	cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
