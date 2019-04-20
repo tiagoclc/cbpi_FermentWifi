@@ -11,7 +11,7 @@ from modules.core.props import Property
 file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","r")
 if file.read()=="sim":
 	file.close()  
-	os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | apt-get install mosquitto mosquitto-clients -y | pip install -q paho-mqtt | systemctl enable mosquitto | sudo service mosquitto restart | avahi-daemon -r")
+	os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | apt-get install mosquitto mosquitto-clients -y | sudo pip install -q paho-mqtt | systemctl enable mosquitto | sudo service mosquitto restart | avahi-daemon -r")
 	file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","w")
 	file.write("nao")
 	file.close()
@@ -138,7 +138,7 @@ def initMQTT(app):
 	file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","r")
 	if file.read()=="sim":
 		file.close()  
-		os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | apt-get install mosquitto mosquitto-clients -y | pip install -q paho-mqtt | systemctl enable mosquitto | sudo service mosquitto restart | avahi-daemon -r")
+		os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | apt-get install mosquitto mosquitto-clients -y | sudo pip install -q paho-mqtt | systemctl enable mosquitto | sudo service mosquitto restart | avahi-daemon -r")
 		file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","w")
 		file.write("nao")
 		file.close()
