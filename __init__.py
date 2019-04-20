@@ -125,7 +125,8 @@ def initMQTT(app):
 	file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","r")
 	if file.read()=="sim":
 		file.close()  
-		os.system("sudo mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | sudo avahi-daemon -r | sudo apt-get install mosquitto mosquitto-clients -y | sudo pip install -q paho-mqtt | sudo service mosquitto stop | sudo mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | sudo systemctl enable mosquitto | sudo service mosquitto start")
+		os.system("sudo su")
+		os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | avahi-daemon -r | apt-get install mosquitto mosquitto-clients -y | pip install -q paho-mqtt | mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | systemctl enable mosquitto | sudo service mosquitto restart")
 		file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","w")
 		file.write("nao")
 		file.close()
