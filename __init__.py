@@ -132,7 +132,7 @@ def initMQTT(app):
 		os.system("sudo reboot")
 	else
 		file.close()
-        cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
-        print "READY"
+	cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
+	print "READY"
 
 
