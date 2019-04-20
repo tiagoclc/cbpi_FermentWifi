@@ -1,13 +1,4 @@
 # -*- coding: utf-8 -*-
-import paho.mqtt.client as mqtt
-from eventlet import Queue
-from modules import cbpi, app, ActorBase
-from modules.core.hardware import SensorActive
-import json
-import os, re, threading, time
-from subprocess import Popen, PIPE, call
-from modules.core.props import Property
-
 
 file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","r")
 if file.read()=="sim":
@@ -20,6 +11,15 @@ if file.read()=="sim":
 else:
 	file.close()
 
+
+import paho.mqtt.client as mqtt
+from eventlet import Queue
+from modules import cbpi, app, ActorBase
+from modules.core.hardware import SensorActive
+import json
+import os, re, threading, time
+from subprocess import Popen, PIPE, call
+from modules.core.props import Property
 
 cache = {}
 
