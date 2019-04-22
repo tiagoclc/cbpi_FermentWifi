@@ -69,7 +69,8 @@ class Resfriador_FermentWifi(ActorBase):
 		
 	def off(self):
 		if self.compressor_on:
-			self.compressor_on = Falseself.compressor_wait = datetime.utcnow() + timedelta(minutes=int(self.r_delay))
+			self.compressor_on = False
+			self.compressor_wait = datetime.utcnow() + timedelta(minutes=int(self.r_delay))
 		self.topic=self.key0+"_RaspiOnOff"
 		mqttc.publish(self.topic,"2")
 		print(self.topic)
@@ -110,7 +111,8 @@ class Aquecedor_FermentWifi(ActorBase):
 				
 	def off(self):
 		if self.compressor2_on:
-			self.compressor_on2 = Falseself.compressor_wait2 = datetime.utcnow() + timedelta(minutes=int(self.a_delay))
+			self.compressor_on2 = False
+			self.compressor_wait2 = datetime.utcnow() + timedelta(minutes=int(self.a_delay))
 
 		self.topic=self.key0+"_RaspiOnOff"
 		mqttc.publish(self.topic,"3")
