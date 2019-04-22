@@ -8,6 +8,9 @@ import os, re, threading, time
 from subprocess import Popen, PIPE, call
 from modules.core.props import Property
 
+from modules.base_plugins.gpio_actor import *
+from datetime import datetime, timedelta
+
 file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","r")
 if file.read()=="sim":
 	file.close()  
@@ -24,6 +27,7 @@ import paho.mqtt.client as mqtt
 cache = {}
 
 q = Queue()
+cbpi.gpio_compressors = []
 
 client = None
 
@@ -35,36 +39,74 @@ mqttc.loop_start()
 class FermentWifiActor(ActorBase):
 
 	usar = Property.Select("O que utilizar do FermentWifi", options=["Aquecedor", "Resfriador"], description="Escolher o que usar do FermentWifi")
-
+	
+	r_delay = Property.Number("Atraso para ligar o Resfriador", True, 5, "minutes")
+	a_delay = Property.Number("Atraso para ligar o Aquecedor", True, 5, "minutes")
 
 	key0 = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
 	
+	compressor_on = False
+	compressor_wait = datetime.utcnow()
+	delayed = False
 
+	compressor_on2 = False
+	compressor_wait2 = datetime.utcnow()
+	delayed2 = False
 
+	
+	def init(self):
+#		super(FermentWifiActor, self).init()
+		cbpi.gpio_compressors += [self]	
+	
+	
 	def on(self, power=None):
 		if self.usar=="Resfriador":
-			self.topic=self.key0+"_RaspiOnOff"
-			
-			mqttc.publish(self.topic,"0")
-			print("enviado liga resfriador")
-			print(self.topic)
+			if datetime.utcnow() >= self.compressor_wait:
+				self.compressor_on = True
+				self.delayed = False
+				
+				self.topic=self.key0+"_RaspiOnOff"
+				mqttc.publish(self.topic,"0")
+				print("enviado liga resfriador")
+				print(self.topic)
+				
+			else:
+				print "Atrasando a ativação do resfriador"
+				self.delayed = True
+		
 		elif self.usar=="Aquecedor":
-			self.topic=self.key0+"_RaspiOnOff"
-			mqttc.publish(self.topic,"1")
-			print("enviado liga aquecedor")
-			print(self.topic)
 
+			if datetime.utcnow() >= self.compressor_wait2:
+				self.compressor_on2 = True
+				self.delayed2 = False
+
+				self.topic=self.key0+"_RaspiOnOff"
+				mqttc.publish(self.topic,"1")
+				print("enviado liga aquecedor")
+				print(self.topic)
+			else:
+				print "Atrasando a ativação do aquecedor"
+				self.delayed2 = True
+				
+				
 	def off(self):
 		if self.usar=="Resfriador":
+			if self.compressor_on:
+				self.compressor_on = Falseself.compressor_wait = datetime.utcnow() + timedelta(minutes=int(self.r_delay))
 			self.topic=self.key0+"_RaspiOnOff"
-			
 			mqttc.publish(self.topic,"2")
-		elif self.usar=="Aquecedor":
-			self.topic=self.key0+"_RaspiOnOff"
+			print(self.topic)
+			self.delayed = False
 
+			
+		elif self.usar=="Aquecedor":
+			if self.compressor2_on:
+				self.compressor_on2 = Falseself.compressor_wait2 = datetime.utcnow() + timedelta(minutes=int(self.a_delay))
+
+			self.topic=self.key0+"_RaspiOnOff"
 			mqttc.publish(self.topic,"3")
 			print(self.topic)
-			
+			self.delayed2 = False
 
 @cbpi.sensor
 class FermentWifiSensor(SensorActive):
@@ -118,6 +160,22 @@ class FermentWifiSensor(SensorActive):
                 '''
                 self.sleep(5)
 
+		
+
+@cbpi.backgroundtask(key="update_compressors", interval=5)
+def update_compressors(api):
+    for FermentWifiActor in cbpi.gpio_compressors:
+        if FermentWifiActor.delayed and datetime.utcnow() >= FermentWifiActor.compressor_wait:
+		FermentWifiActor.topic=FermentWifiActor.key0+"_RaspiOnOff"
+		mqttc.publish(FermentWifiActor.topic,"0")
+		print("enviado liga resfriador")
+		print(FermentWifiActor.topic)
+	
+	if FermentWifiActor.delayed2 and datetime.utcnow() >= FermentWifiActor.compressor_wait2:
+		FermentWifiActor.topic=FermentWifiActor.key0+"_RaspiOnOff"
+		mqttc.publish(FermentWifiActor.topic,"0")
+		print("enviado liga resfriador")
+		print(FermentWifiActor.topic)
 
 @cbpi.initalizer(order=0)
 
