@@ -39,11 +39,11 @@ mqttc.loop_start()
 class FermentWifiActor(ActorBase):
 
 	usar = Property.Select("O que utilizar do FermentWifi", options=["Aquecedor", "Resfriador"], description="Escolher o que usar do FermentWifi")
-	
-	r_delay = Property.Number("Atraso para ligar o Resfriador", True, 5, "minutes")
-	a_delay = Property.Number("Atraso para ligar o Aquecedor", True, 5, "minutes")
-
 	key0 = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
+	
+	r_delay = Property.Number("Atraso para ligar o Resfriador (minutos)", True, 5, "minutes")
+	a_delay = Property.Number("Atraso para ligar o Aquecedor(minutos)", True, 5, "minutes")
+
 	
 	compressor_on = False
 	compressor_wait = datetime.utcnow()
