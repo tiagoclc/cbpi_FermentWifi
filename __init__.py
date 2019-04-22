@@ -11,16 +11,16 @@ from modules.core.props import Property
 from modules.base_plugins.gpio_actor import *
 from datetime import datetime, timedelta
 
-file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","r")
-if file.read()=="sim":
-	file.close()  
-	os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | apt-get install mosquitto mosquitto-clients -y | pip install -q --user paho-mqtt | systemctl enable mosquitto | sudo service mosquitto restart | avahi-daemon -r")
-	file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","w")
-	file.write("nao")
-	file.close()
-	os.system("reboot")
-else:
-	file.close()
+#file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","r")
+#if file.read()=="sim":
+#	file.close()  
+#	os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | apt-get install mosquitto mosquitto-clients -y | pip install -q --user paho-mqtt | systemctl enable mosquitto | sudo service mosquitto restart | avahi-daemon -r")
+#	file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","w")
+#	file.write("nao")
+#	file.close()
+#	os.system("reboot")
+#else:
+#	file.close()
 
 import paho.mqtt.client as mqtt
 
@@ -193,16 +193,16 @@ def initMQTT(app):
                                 api.receive_sensor_value(m.get("id"), m.get("value"))
                         except:
                                 pass
-	file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","r")
-	if file.read()=="sim":
-		file.close()  
-		os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | apt-get install mosquitto mosquitto-clients -y | pip install -q --user paho-mqtt | systemctl enable mosquitto | sudo service mosquitto restart | avahi-daemon -r")
-		file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","w")
-		file.write("nao")
-		file.close()
-		os.system("reboot")
-	else:
-		file.close()
+#	file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","r")
+#	if file.read()=="sim":
+#		file.close()  
+#		os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | apt-get install mosquitto mosquitto-clients -y | pip install -q --user paho-mqtt | systemctl enable mosquitto | sudo service mosquitto restart | avahi-daemon -r")
+#		file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","w")
+#		file.write("nao")
+#		file.close()
+#		os.system("reboot")
+#	else:
+#		file.close()
 	cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
 	print "READY"
 
