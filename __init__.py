@@ -24,6 +24,9 @@ from datetime import datetime, timedelta
 
 import paho.mqtt.client as mqtt
 
+a_ativado=0
+r_ativado=0
+
 cache = {}
 
 q = Queue()
@@ -179,18 +182,20 @@ class FermentWifiSensor(SensorActive):
 @cbpi.backgroundtask(key="update_compressors", interval=5)
 def update_compressors(api):
 	for Resfriador_FermentWifi in cbpi.gpio_compressors:
-        	if Resfriador_FermentWifi.delayed and datetime.utcnow() >= Resfriador_FermentWifi.compressor_wait:
+        	if Resfriador_FermentWifi.delayed and datetime.utcnow() >= Resfriador_FermentWifi.compressor_wait && Resfriador_FermentWifi.compressor_on==false:
 			Resfriador_FermentWifi.topic=Resfriador_FermentWifi.key0+"_RaspiOnOff"
 			mqttc.publish(Resfriador_FermentWifi.topic,"0")
 			print("enviado liga resfriador")
 			print(Resfriador_FermentWifi.topic)
+			Resfriador_FermentWifi.compressor_on=true
 
 	for Aquecedor_FermentWifi in cbpi.gpio_compressors2:
-		if Aquecedor_FermentWifi.delayed2 and datetime.utcnow() >= Aquecedor_FermentWifi.compressor_wait2:
+		if Aquecedor_FermentWifi.delayed2 and datetime.utcnow() >= Aquecedor_FermentWifi.compressor_wait2 && Aquecedor_FermentWifi.compressor_on==false:
 			Aquecedor_FermentWifi.topic=Aquecedor_FermentWifi.key0+"_RaspiOnOff"
-			mqttc.publish(Aquecedor_FermentWifi.topic,"0")
+			mqttc.publish(Aquecedor_FermentWifi.topic,"1")
 			print("enviado liga aquecedor")
 			print(Aquecedor_FermentWifi.topic)
+			Aquecedor_FermentWifi.compressor_on=true
 
 @cbpi.initalizer(order=0)
 
