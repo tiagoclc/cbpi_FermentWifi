@@ -110,7 +110,7 @@ class Aquecedor_FermentWifi(ActorBase):
 				
 				
 	def off(self):
-		if self.compressor2_on:
+		if self.compressor_on2:
 			self.compressor_on2 = False
 			self.compressor_wait2 = datetime.utcnow() + timedelta(minutes=int(self.a_delay))
 
@@ -118,6 +118,9 @@ class Aquecedor_FermentWifi(ActorBase):
 		mqttc.publish(self.topic,"3")
 		print(self.topic)
 		self.delayed2 = False			
+
+		
+		
 
 @cbpi.sensor
 class FermentWifiSensor(SensorActive):
