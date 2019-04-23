@@ -190,12 +190,12 @@ def update_compressors(api):
 			Resfriador_FermentWifi.compressor_on=true
 
 	for Aquecedor_FermentWifi in cbpi.gpio_compressors2:
-		if Aquecedor_FermentWifi.delayed2 and datetime.utcnow() >= Aquecedor_FermentWifi.compressor_wait2 & Aquecedor_FermentWifi.compressor_on==false:
+		if Aquecedor_FermentWifi.delayed2 and datetime.utcnow() >= Aquecedor_FermentWifi.compressor_wait2 & Aquecedor_FermentWifi.compressor_on2==false:
 			Aquecedor_FermentWifi.topic=Aquecedor_FermentWifi.key0+"_RaspiOnOff"
 			mqttc.publish(Aquecedor_FermentWifi.topic,"1")
 			print("enviado liga aquecedor")
 			print(Aquecedor_FermentWifi.topic)
-			Aquecedor_FermentWifi.compressor_on=true
+			Aquecedor_FermentWifi.compressor_on2=true
 
 @cbpi.initalizer(order=0)
 
