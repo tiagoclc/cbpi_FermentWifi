@@ -83,7 +83,7 @@ class Aquecedor_FermentWifi(ActorBase):
 
 	key0 = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
 	
-	a_delay = Property.Number("Atraso para ligar o Aquecedor(minutos)", True, 5, "minutes")
+	l_delay = Property.Number("Atraso para ligar o Aquecedor(minutos)", True, 5, "minutes")
 
 	compressor_on2 = False
 	compressor_wait2 = datetime.utcnow()
@@ -112,7 +112,7 @@ class Aquecedor_FermentWifi(ActorBase):
 	def off(self):
 		if self.compressor_on2:
 			self.compressor_on2 = False
-			self.compressor_wait2 = datetime.utcnow() + timedelta(minutes=int(self.a_delay))
+			self.compressor_wait2 = datetime.utcnow() + timedelta(minutes=int(self.l_delay))
 
 		self.topic=self.key0+"_RaspiOnOff"
 		mqttc.publish(self.topic,"3")
