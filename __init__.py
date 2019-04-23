@@ -189,7 +189,7 @@ def update_compressors(api):
 		if Aquecedor_FermentWifi.delayed2 and datetime.utcnow() >= Aquecedor_FermentWifi.compressor_wait2:
 			Aquecedor_FermentWifi.topic=Aquecedor_FermentWifi.key0+"_RaspiOnOff"
 			mqttc.publish(Aquecedor_FermentWifi.topic,"0")
-			print("enviado liga resfriador")
+			print("enviado liga aquecedor")
 			print(Aquecedor_FermentWifi.topic)
 
 @cbpi.initalizer(order=0)
