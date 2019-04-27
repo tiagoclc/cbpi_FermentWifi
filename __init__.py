@@ -8,22 +8,31 @@ import os, re, threading, time
 from subprocess import Popen, PIPE, call
 from modules.core.props import Property
 
-file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","r")
-if file.read()=="sim":
-	file.close()  
-	os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | apt-get install mosquitto mosquitto-clients -y | pip install -q --user paho-mqtt | systemctl enable mosquitto | sudo service mosquitto restart | avahi-daemon -r")
-	file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","w")
-	file.write("nao")
-	file.close()
-	os.system("reboot")
-else:
-	file.close()
+from modules.base_plugins.gpio_actor import *
+from datetime import datetime, timedelta
+
+#file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","r")
+#if file.read()=="sim":
+#	file.close()  
+#	os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | apt-get install mosquitto mosquitto-clients -y | pip install -q --user paho-mqtt | systemctl enable mosquitto | sudo service mosquitto restart | avahi-daemon -r")
+#	file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","w")
+#	file.write("nao")
+#	file.close()
+#	os.system("reboot")
+#else:
+#	file.close()
 
 import paho.mqtt.client as mqtt
+
+a_ativado=0
+r_ativado=0
 
 cache = {}
 
 q = Queue()
+cbpi.gpio_compressors = []
+
+cbpi.gpio_compressors2 = []
 
 client = None
 
@@ -32,39 +41,89 @@ mqttc.connect("localhost",1883,60)
 mqttc.loop_start()
 
 @cbpi.actor
-class FermentWifiActor(ActorBase):
-
-	usar = Property.Select("O que utilizar do FermentWifi", options=["Aquecedor", "Resfriador"], description="Escolher o que usar do FermentWifi")
-
+class Resfriador_FermentWifi(ActorBase):
 
 	key0 = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
 	
+	r_delay = Property.Number("Atraso para ligar o Resfriador (minutos)", True, 5, "minutes")
+	
+	compressor_on = False
+	compressor_wait = datetime.utcnow()
+	delayed = False
 
-
+	def init(self):
+#		super(FermentWifiActor, self).init()
+		cbpi.gpio_compressors += [self]	
+	
 	def on(self, power=None):
-		if self.usar=="Resfriador":
+
+		if datetime.utcnow() >= self.compressor_wait:
+			self.compressor_on = True
+			self.delayed = False
+				
 			self.topic=self.key0+"_RaspiOnOff"
-			
 			mqttc.publish(self.topic,"0")
 			print("enviado liga resfriador")
 			print(self.topic)
-		elif self.usar=="Aquecedor":
+				
+		else:
+			print "Atrasando a ativação do resfriador"
+			self.delayed = True
+		
+	def off(self):
+		if self.compressor_on:
+			self.compressor_on = False
+			self.compressor_wait = datetime.utcnow() + timedelta(minutes=int(self.r_delay))
+		self.topic=self.key0+"_RaspiOnOff"
+		mqttc.publish(self.topic,"2")
+		print(self.topic)
+		self.delayed = False
+			
+			
+
+@cbpi.actor
+class Aquecedor_FermentWifi(ActorBase):
+
+	key0 = Property.Text(label="Nome do FermentWifi (ex: FW_0000)", configurable=True)
+	
+	l_delay = Property.Number("Atraso para ligar o Aquecedor(minutos)", True, 5, "minutes")
+
+	compressor_on2 = False
+	compressor_wait2 = datetime.utcnow()
+	delayed2 = False
+
+	
+	def init(self):
+#		super(FermentWifiActor, self).init()
+		cbpi.gpio_compressors2 += [self]	
+	
+	
+	def on(self, power=None):
+		if datetime.utcnow() >= self.compressor_wait2:
+			self.compressor_on2 = True
+			self.delayed2 = False
+
 			self.topic=self.key0+"_RaspiOnOff"
 			mqttc.publish(self.topic,"1")
 			print("enviado liga aquecedor")
 			print(self.topic)
-
+		else:
+			print "Atrasando a ativação do aquecedor"
+			self.delayed2 = True
+				
+				
 	def off(self):
-		if self.usar=="Resfriador":
-			self.topic=self.key0+"_RaspiOnOff"
-			
-			mqttc.publish(self.topic,"2")
-		elif self.usar=="Aquecedor":
-			self.topic=self.key0+"_RaspiOnOff"
+		if self.compressor_on2:
+			self.compressor_on2 = False
+			self.compressor_wait2 = datetime.utcnow() + timedelta(minutes=int(self.l_delay))
 
-			mqttc.publish(self.topic,"3")
-			print(self.topic)
-			
+		self.topic=self.key0+"_RaspiOnOff"
+		mqttc.publish(self.topic,"3")
+		print(self.topic)
+		self.delayed2 = False			
+
+		
+		
 
 @cbpi.sensor
 class FermentWifiSensor(SensorActive):
@@ -118,6 +177,27 @@ class FermentWifiSensor(SensorActive):
                 '''
                 self.sleep(5)
 
+		
+
+@cbpi.backgroundtask(key="update_compressors", interval=5)
+def update_compressors(api):
+	for Resfriador_FermentWifi in cbpi.gpio_compressors:
+        	if Resfriador_FermentWifi.delayed and datetime.utcnow() >= Resfriador_FermentWifi.compressor_wait:
+			if Resfriador_FermentWifi.compressor_on==False:
+				Resfriador_FermentWifi.topic=Resfriador_FermentWifi.key0+"_RaspiOnOff"
+				mqttc.publish(Resfriador_FermentWifi.topic,"0")
+				print("enviado liga resfriador")
+				print(Resfriador_FermentWifi.topic)
+				Resfriador_FermentWifi.compressor_on=True
+
+	for Aquecedor_FermentWifi in cbpi.gpio_compressors2:
+		if Aquecedor_FermentWifi.delayed2 and datetime.utcnow() >= Aquecedor_FermentWifi.compressor_wait2:
+			if Aquecedor_FermentWifi.compressor_on2==False:
+				Aquecedor_FermentWifi.topic=Aquecedor_FermentWifi.key0+"_RaspiOnOff"
+				mqttc.publish(Aquecedor_FermentWifi.topic,"1")
+				print("enviado liga aquecedor")
+				print(Aquecedor_FermentWifi.topic)
+				Aquecedor_FermentWifi.compressor_on2=True
 
 @cbpi.initalizer(order=0)
 
@@ -135,16 +215,16 @@ def initMQTT(app):
                                 api.receive_sensor_value(m.get("id"), m.get("value"))
                         except:
                                 pass
-	file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","r")
-	if file.read()=="sim":
-		file.close()  
-		os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | apt-get install mosquitto mosquitto-clients -y | pip install -q --user paho-mqtt | systemctl enable mosquitto | sudo service mosquitto restart | avahi-daemon -r")
-		file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","w")
-		file.write("nao")
-		file.close()
-		os.system("reboot")
-	else:
-		file.close()
+#	file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","r")
+#	if file.read()=="sim":
+#		file.close()  
+#		os.system("mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/esp.service /etc/avahi/services/ | mv /home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/mosquitto.conf /etc/mosquitto/ | apt-get install mosquitto mosquitto-clients -y | pip install -q --user paho-mqtt | systemctl enable mosquitto | sudo service mosquitto restart | avahi-daemon -r")
+#		file = open("/home/pi/craftbeerpi3/modules/plugins/FermentWifiPlugin/roda.txt","w")
+#		file.write("nao")
+#		file.close()
+#		os.system("reboot")
+#	else:
+#		file.close()
 	cbpi.socketio.start_background_task(target=mqtt_reader, api=app)
 	print "READY"
 
