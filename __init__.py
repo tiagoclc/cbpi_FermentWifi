@@ -186,7 +186,7 @@ class FermentWifiSensor(SensorActive):
 def update_compressors(api):
 	for Resfriador_FermentWifi in cbpi.gpio_compressors:
         	if Resfriador_FermentWifi.delayed and datetime.utcnow() >= Resfriador_FermentWifi.compressor_wait:
-			if Resfriador_FermentWifi.compressor_on: #==False:
+			if Resfriador_FermentWifi.compressor_on==False:
 				#Resfriador_FermentWifi.topic=Resfriador_FermentWifi.key0+"_RaspiOnOff"
 				#mqttc.publish(Resfriador_FermentWifi.topic,"0")
 				print("enviado liga resfriador")
@@ -197,7 +197,7 @@ def update_compressors(api):
 
 	for Aquecedor_FermentWifi in cbpi.gpio_compressors2:
 		if Aquecedor_FermentWifi.delayed2 and datetime.utcnow() >= Aquecedor_FermentWifi.compressor_wait2:
-			if Aquecedor_FermentWifi.compressor_on2: #==False:
+			if Aquecedor_FermentWifi.compressor_on2==False:
 				#Aquecedor_FermentWifi.topic=Aquecedor_FermentWifi.key0+"_RaspiOnOff"
 				#mqttc.publish(Aquecedor_FermentWifi.topic,"1")
 				print("enviado liga aquecedor")
