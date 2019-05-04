@@ -55,10 +55,11 @@ class Resfriador_FermentWifi(ActorBase):
 		super(Resfriador_FermentWifi, self).init()
 		cbpi.gpio_compressors += [self]	
 	
-	def on(self, power=None):
+	def on(self, power=0):
 
 		if datetime.utcnow() >= self.compressor_wait:
 			self.compressor_on = True
+			super(Resfriador_FermentWifi, self).on(power)
 			self.delayed = False
 				
 			self.topic=self.key0+"_RaspiOnOff"
@@ -101,9 +102,10 @@ class Aquecedor_FermentWifi(ActorBase):
 		cbpi.gpio_compressors2 += [self]	
 	
 	
-	def on(self, power=None):
+	def on(self, power=0):
 		if datetime.utcnow() >= self.compressor_wait2:
 			self.compressor_on2 = True
+			super(Aquecedor_FermentWifi, self).on(power)
 			self.delayed2 = False
 
 			self.topic=self.key0+"_RaspiOnOff"
